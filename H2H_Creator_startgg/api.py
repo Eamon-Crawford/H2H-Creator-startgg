@@ -1,5 +1,5 @@
 import requests
-from exceptions import TooManyRequestsError, ResponseError, RequestError, ServerError, NoIdeaError
+from .exceptions import TooManyRequestsError, ResponseError, RequestError, ServerError, NoIdeaError
 
 def run_query(query, variables, header):
     json_request = {'query': query, 'variables': variables}

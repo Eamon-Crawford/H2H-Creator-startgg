@@ -1,7 +1,7 @@
-import events
-import results
-import players
-import creator
+from .events import get_events, get_tournaments_by_game_during_time_period
+from .results import get_results
+from .players import get_players_info
+from .creator import h2h_spreadsheet, wl_spreadsheet
 
 class H2HMaker(object):
     def __init__(self, key, save_json:bool, sleep_time=15): # Initializes object
@@ -30,19 +30,19 @@ class H2HMaker(object):
         print(self.sleep_time)
 
     def get_players_info(self, player_list:list): # List of slugs
-        return players.get_players_info(player_list, self.save_json, self.header, self.sleep_time)
+        return get_players_info(player_list, self.save_json, self.header, self.sleep_time)
     
     def get_tournaments_by_game_during_time_period(self, game:int, after:int, before:int):
-        return events.get_tournaments_by_game_during_time_period(game, after, before, self.save_json, self.header, self.sleep_time)
+        return get_tournaments_by_game_during_time_period(game, after, before, self.save_json, self.header, self.sleep_time)
         
     def get_events(self, tournaments:list, game):
-        return events.get_events(tournaments, game, self.save_json, self.header, self.sleep_time)
+        return get_events(tournaments, game, self.save_json, self.header, self.sleep_time)
 
     def get_results(self, events:list, players:list): 
-        return results.get_results(events, players, self.save_json, self.header, self.sleep_time)
+        return get_results(events, players, self.save_json, self.header, self.sleep_time)
 
     def create_h2h_spreadsheet(self, events:list, players:list):
-        return creator.h2h_spreadsheet(events, players, self.save_json, self.header, self.sleep_time)
+        return h2h_spreadsheet(events, players, self.save_json, self.header, self.sleep_time)
 
     def create_win_loss_spreadsheet(self, events:list, players:list):
-        return creator.wl_spreadsheet(events, players, self.save_json, self.header, self.sleep_time)
+        return wl_spreadsheet(events, players, self.save_json, self.header, self.sleep_time)

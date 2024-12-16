@@ -1,7 +1,7 @@
 import json
 import csv
-from players import get_players_info
-from results import get_results
+from .players import get_players_info
+from .results import get_results
 
 def create_player_dictionary(results:list, players:list, save_json:bool, header, sleep_time):
     players_info = get_players_info(players, save_json, header, sleep_time)
@@ -9,7 +9,6 @@ def create_player_dictionary(results:list, players:list, save_json:bool, header,
     player_dict = {}
     for p in players_info: # Initializes dictionary
         player_dict[players_info[p]["player"]["gamerTag"]] = {"Slug": p, "ID": players_info[p]["player"]["id"], 'Events': [], 'Sets': [], 'W': [], 'L': []}
-
     for tournament in results:
         for set in results[tournament]['sets']:
             event_slug = tournament
@@ -19,6 +18,8 @@ def create_player_dictionary(results:list, players:list, save_json:bool, header,
             entrant2 = set['slots'][1]['entrant']['participants'][0]['player']['gamerTag'].split(' | ')[-1].strip() # Gamertag
             entrant2_slug = set['slots'][1]['entrant']['participants'][0]['player']['user']['slug'].split('/')[1] # Slug
             entrant2_score = set['slots'][1]['standing']['stats']['score']['value'] # Score
+            if entrant1_score is None or entrant2_score is None:
+                continue
 
             if set['slots'][0]['standing'] is not None: # If match is completed
                 # Both players in the set are important

@@ -1,12 +1,12 @@
 # File for getting all results from list of players and events
 
 import json
-from api import run_query
-from events import get_events
-from players import get_players_info
-from queries import RESULTS_QUERY
+from .api import run_query
+from .events import get_events
+from .players import get_players_info
+from .queries import RESULTS_QUERY
 from time import sleep
-from exceptions import *
+from .exceptions import *
 
 def get_results(events:list, players:list, save_json:bool, header, sleep_time):
     results = {}
@@ -43,12 +43,19 @@ def get_results(events:list, players:list, save_json:bool, header, sleep_time):
             print("Page {}".format(i)) # Console logging
             i += 1 # iteration for next time
 
-            for s in response['data']['event']['sets']['nodes']: # Iterate through all sets
-                player1 = s['slots'][0]['entrant']['participants'][0]['player']['user']['slug'].split('/')[1] # Gets user slug of player #1
-                player2 = s['slots'][1]['entrant']['participants'][0]['player']['user']['slug'].split('/')[1] # Gets user slug of player #2
+            for se in response['data']['event']['sets']['nodes']: # Iterate through all sets
+                try:
+                    if se['slots'][1]['entrant']['participants'][0]['player']['user'] is None:
+                        continue
+                    if se['slots'][0]['entrant']['participants'][0]['player']['user'] is None:
+                        continue
+                except:
+                    continue
+                player1 = se['slots'][0]['entrant']['participants'][0]['player']['user']['slug'].split('/')[1] # Gets user slug of player #1
+                player2 = se['slots'][1]['entrant']['participants'][0]['player']['user']['slug'].split('/')[1] # Gets user slug of player #2
                 if (player1 in players or player2 in players): # If either player is in the list
-                    if (s not in sets): # Prevent duplicate sets
-                        sets.append(s) # Append set to sets list
+                    if (se not in sets): # Prevent duplicate sets
+                        sets.append(se) # Append set to sets list
 
         results[e] = {
             # Will add more info
